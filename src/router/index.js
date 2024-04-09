@@ -2,6 +2,7 @@ import {createWebHistory, createRouter} from "vue-router";
 import HomeView from "../components/HomeView.vue";
 import SearchItem from "../components/SearchItem.vue";
 import ReportItem from "../components/ReportItem.vue";
+import ItemDetail from "../components/ItemDetail.vue";
 
 const routes = [
     {
@@ -19,6 +20,11 @@ const routes = [
         path: "/reportitem",
         name: "ReportItem",
         component: ReportItem
+    },
+    {
+        path: '/itemdetail/:id', // :id is a dynamic segment
+        name: 'ItemDetail',
+        component: ItemDetail
     }
 ];
 

@@ -14,10 +14,14 @@
             <button :class="{ active: itemType === 'Lost' }" @click="fetchItems('Lost')">Show Lost Items</button>
             <button :class="{ active: itemType === 'Found' }" @click="fetchItems('Found')">Show Found Items</button>
         </div>
+        <div class="container">
+            <input type="text" v-model="keyword" placeholder="Enter keyword...">
+            <button @click="keywordSearch">Search</button>
+        </div>
         <div class="container" v-if="items.length > 0">
         <div class="row">
             <div v-for="item in items" :key="item.id">
-            <div class="card">
+            <div class="card" @click.prevent="showItemDetail(item.id)">
                 <div class="card-body">
                     <img v-if="item.image" :src="'http://localhost:8080/uploads/' + item.image" :alt="item.title" class="card-img">
                     <h4>{{ item.title }}</h4>
@@ -40,19 +44,32 @@ export default {
     data(){
         return{
             items: [],
-            itemType: 'Lost' // Default 'Lost'
+            itemType: 'Lost', // Default 'Lost'
+            keyword: ''
         };
     },
     methods:{
         fetchItems(itemType){
-            this.itemType = itemType;
-            ItemService.getItemsByType(itemType, "Active")
-                .then(response => {
-                    this.items = response.data;
-                })
-                .catch(error => {
-                    console.error("Error fetching items: ", error);
-                });
+          this.itemType = itemType;
+          ItemService.getItemsByType(itemType, "Active")
+            .then(response => {
+                this.items = response.data;
+            })
+            .catch(error => {
+                console.error("Error fetching items: ", error);
+            });
+        }, 
+        showItemDetail(id){
+          this.$router.push({ name: 'ItemDetail', params: { id: id } });
+        },
+        keywordSearch(){
+          ItemService.getItemsByKeyword(this.itemType, "Active", this.keyword)
+          .then(response => {
+            this.items = response.data;
+          })
+          .catch(error => {
+            console.error("Error searching items: ", error);
+          });
         }
     },
     mounted(){
@@ -113,6 +130,7 @@ button {
   color: #ffffff;
   border: 1px solid #3079b3; 
   padding: 10px 15px;
+  margin-left: 10px;
   margin-right: 10px;
   cursor: pointer;
   font-family: Tahoma, Geneva, Verdana, sans-serif; 
