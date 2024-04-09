@@ -9,7 +9,7 @@
     </ul> 
     <p v-else>No items to display.</p> 
     -->
-    <div>
+    <div class="container">
         <div class="container">
             <button :class="{ active: itemType === 'Lost' }" @click="fetchItems('Lost')">Show Lost Items</button>
             <button :class="{ active: itemType === 'Found' }" @click="fetchItems('Found')">Show Found Items</button>
@@ -19,20 +19,23 @@
             <button @click="keywordSearch">Search</button>
         </div>
         <div class="container" v-if="items.length > 0">
-        <div class="row">
-            <div v-for="item in items" :key="item.id">
-            <div class="card" @click.prevent="showItemDetail(item.id)">
-                <div class="card-body">
-                    <img v-if="item.image" :src="'http://localhost:8080/uploads/' + item.image" :alt="item.title" class="card-img">
-                    <h4>{{ item.title }}</h4>
-                    <p>{{ item.description }}</p>
-                    <br />
-                    <p v-if="item.location"><small>Location: {{ item.location.name }}</small></p>
-                    <p><small>Posted: {{ item.datePosted }}</small></p>
+          <div class="row">
+              <div v-for="item in items" :key="item.id">
+                <div class="card" @click.prevent="showItemDetail(item.id)">
+                    <div class="card-body">
+                        <img v-if="item.image" :src="'http://localhost:8080/uploads/' + item.image" :alt="item.title" class="card-img">
+                        <h4>{{ item.title }}</h4>
+                        <p>{{ item.description }}</p>
+                        <br />
+                        <p v-if="item.location"><small>Location: {{ item.location.name }}</small></p>
+                        <p><small>Posted: {{ item.datePosted }}</small></p>
+                    </div>
                 </div>
-            </div>
-            </div>
+              </div>
+          </div>
         </div>
+        <div v-else>
+          <p>Item not found.</p>
         </div>
     </div>
 </template>
@@ -122,7 +125,7 @@ export default {
 }
 
 .card-body {
-    padding: 8px;
+  padding: 8px;
 }
 
 button {
