@@ -325,14 +325,14 @@ export default {
 .container-box input, .container-box select {
     width: 320px;
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid #cccccc;
     border-radius: 4px;
 }
 
 .container-box textarea {
     width: 320px;
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid #cccccc;
     border-radius: 4px;
     resize: vertical;
 }
