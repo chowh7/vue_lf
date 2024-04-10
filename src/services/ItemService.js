@@ -18,6 +18,12 @@ class ItemService {
     postItem(item){
         return http.post("/items",item);
     }
+    uploadItemImage(id, formData) {
+        return http.post(`/items/${id}/image`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }});
+    }
 }
 
 export default new ItemService();

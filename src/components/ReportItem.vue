@@ -3,55 +3,65 @@
         <div class="container">
             <form>
                 <h2>Report a {{ itemTypeTitle }} Item</h2>
-                <h3>Item Details</h3>
-                <div class="row">
-                    <div class="container-text">
-                        <label for="itemType">Type*:</label></div>
-                    <div class="container-box">
-                        <select id="itemType" name="itemType" v-model="itemType">
-                            <option value="Lost">Lost</option>
-                            <option value="Found">Found</option>
-                        </select>
+                <div class="container">
+                    <h3>Item Details</h3>
+                    <div class="row">
+                        <div class="container-text">
+                            <label for="itemType">Type*:</label></div>
+                        <div class="container-box">
+                            <select id="itemType" name="itemType" v-model="itemType">
+                                <option value="Lost">Lost</option>
+                                <option value="Found">Found</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="container-text">
-                        <label for="title">Item Name*:</label>
+                    <div class="row">
+                        <div class="container-text">
+                            <label for="title">Item Name*:</label>
+                        </div>
+                        <div class="container-box">
+                            <input id="title" name="title" type="text" v-model="title" required>
+                        </div>
                     </div>
-                    <div class="container-box">
-                        <input id="title" name="title" type="text" v-model="title" required>
+                    <div class="row">
+                        <div class="container-text">
+                            <label for="description">Description:</label>
+                        </div>
+                        <div class="container-box">
+                            <textarea id="description" type="text" v-model="description" rows="4"></textarea>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="container-text">
-                        <label for="description">Description:</label>
+                    <div class="row">
+                        <div class="container-text">
+                            <label for="color">Color:</label>
+                        </div>
+                        <div class="container-box">
+                            <input id="color" type="text" v-model="color">
+                        </div>
                     </div>
-                    <div class="container-box">
-                        <input id="description" type="text" v-model="description">
+                    <div class="row">
+                        <div class="container-text">
+                            <label for="category">Category:</label>
+                        </div>
+                        <div class="container-box">
+                            <select id="category" name="category" v-model="category">
+                                <option value="Books">Books</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Foods">Foods</option>
+                                <option value="PA">Personal Accessories</option>
+                                <option value="Pets">Pets</option>
+                                <option value="Sports">Sports & Outdoors</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="container-text">
-                        <label for="color">Color:</label>
-                    </div>
-                    <div class="container-box">
-                        <input id="color" type="text" v-model="color">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="container-text">
-                        <label for="category">Category:</label>
-                    </div>
-                    <div class="container-box">
-                        <select id="category" name="category" v-model="category">
-                            <option value="Books">Books</option>
-                            <option value="Electronics">Electronics</option>
-                            <option value="Foods">Foods</option>
-                            <option value="PA">Personal Accessories</option>
-                            <option value="Pets">Pets</option>
-                            <option value="Sports">Sports & Outdoors</option>
-                            <option value="Others">Others</option>
-                        </select>
+                    <div class="row">
+                        <div class="container-text">
+                        <label for="image">Item Image:</label>
+                        </div>
+                        <div class="container-box">
+                        <input type="file" id="image" @change="handleFileUpload" accept="image/*">
+                        </div>
                     </div>
                 </div>
                 <!-- <div class="row">
@@ -139,12 +149,12 @@
                         </div>
                     </div>
                 </div>
+
             </form>
-            <div class="container">
-                <button @click="handleSubmit">Submit</button>
-                <br/>
-                <label class="errorMessage" id=resultMessage>{{ resultMessage }}</label>
-            </div>
+            <button @click="handleSubmit">Submit</button>
+            <br/>
+            <label class="errorMessage" id=resultMessage>{{ resultMessage }}</label>
+                
         </div>
     </div>
 </template>
@@ -184,10 +194,15 @@ export default {
             resultMessage: "",
             itemType:"",
             itemTypeTitle: "",
-            category: ""
+            category: "",
+            image: ''
         };
     },
     methods: {
+        handleFileUpload(event) {
+            event.preventDefault();
+            this.image = event.target.files[0];
+        },
         handleSubmit(event) {
             event.preventDefault();
             this.item.title = this.title;
@@ -209,6 +224,24 @@ export default {
                 .then(response => {
                     this.resultMessage = "item submitted";
                     console.log(response.data);
+
+                    // upload image
+                    if (this.image) {
+                        const formData = new FormData();
+                        formData.append('image', this.image);
+
+                        ItemService.uploadItemImage(response.data.id, formData)
+                            .then(response => {
+                                console.log("Image uploaded successfully");
+                                console.log(response.data);
+                            })
+                            .catch(error => {
+                                console.error("Error uploading image: ", error);
+                            });
+                    } 
+                    localStorage.setItem('title', this.item.title) 
+                    localStorage.setItem('itemType', this.item.itemType === 'Lost' ? 'Found' : 'Lost' )
+
                     this.$router.push({ name: "ReportItemSuccess"});
                 })
                 .catch(error => {
@@ -264,47 +297,49 @@ export default {
 
 <style scoped>
 .container {
-    width: 500px;
-    padding-top: 16px;
-    padding-bottom: 16px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-}
-
-.container-text {
-    width: 200px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: right;
-}
-
-.container-box {
-    width: 100px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin: left 0%;
-    margin-right: auto;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     text-align: left;
 }
 
-.container-error {
-    width: 300px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-    margin-left: 210px;
-    margin-right: auto;
-    text-align: left;
+.container h2, .container h3 {
+    color: #3498db;
 }
 
 .row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    justify-content: center;
-    justify-items: center;
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.container-text {
+    min-width: 150px;
+    margin-right: 20px;
+    text-align: right;
+}
+
+.container-box input, .container-box select {
+    width: 320px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.container-box textarea {
+    width: 320px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+.action-container {
+    margin-top: 20px;
+    text-align: center;
 }
 
 
