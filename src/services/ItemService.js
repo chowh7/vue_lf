@@ -15,6 +15,9 @@ class ItemService {
               keyword: keyword
             } });
     }
+    postItem(item){
+        return http.post("/items",item);
+    }
 }
 
 export default new ItemService();

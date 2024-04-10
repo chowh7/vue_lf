@@ -3,6 +3,7 @@ import HomeView from "../components/HomeView.vue";
 import SearchItem from "../components/SearchItem.vue";
 import ReportItem from "../components/ReportItem.vue";
 import ItemDetail from "../components/ItemDetail.vue";
+import ReportItemSuccess from "../components/ReportItemSuccess.vue"
 
 const routes = [
     {
@@ -25,6 +26,11 @@ const routes = [
         path: '/itemdetail/:id', // :id is a dynamic segment
         name: 'ItemDetail',
         component: ItemDetail
+    },
+    {
+        path: "/reportitemsuccess",
+        name: "ReportItemSuccess",
+        component: ReportItemSuccess
     }
 ];
 
