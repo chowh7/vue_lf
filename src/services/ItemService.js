@@ -29,6 +29,9 @@ class ItemService {
             }
         });
     }
+    deleteItemById(id){
+        return http.delete(`/items/${id}`);
+    }
 }
 
 export default new ItemService();
