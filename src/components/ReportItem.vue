@@ -131,10 +131,10 @@
                     </div>
                     <div class="row">
                         <div class="container-text">
-                            <label for="phone">Contact number*:</label>
+                            <label for="phone">Contact number:</label>
                         </div>
                         <div class="container-box">
-                            <input id="phone" type="tel" @input="validatePhone" v-model="phone" required>
+                            <input id="phone" type="tel" @input="validatePhone" v-model="phone">
                         </div>
                     </div>
                         <div class="container-error">
@@ -142,11 +142,14 @@
                     </div>
                     <div class="row">
                         <div class="container-text">
-                            <label for="email">Email Address:</label>
+                            <label for="email">Email Address*:</label>
                         </div>
                         <div class="container-box">
                             <input id="email" type="email" required v-model="email">
                         </div>
+                    </div>
+                    <div class="container-error">
+                        <label v-if="!isEmailValid" class="errorMessage">Please enter a valid email address</label>
                     </div>
                 </div>
 
@@ -191,6 +194,8 @@ export default {
             },
 
             isNumeric: true,
+            isEmailValid: true,
+            errorEmailMessage: "",
             resultMessage: "",
             itemType:"",
             itemTypeTitle: "",
@@ -216,10 +221,18 @@ export default {
 
             this.item.contact = this.setContactDetails();
             this.item.location = this.setLocationDetails();
+            this.validateEmail();
 
-            if(this.item.itemType==null || this.item.title == null || this.location.name == null || this.location.address == null || this.location.country == null || this.contact.fName == null || this.contact.lName == null || this.contact.phone == null || this.isNumeric == false){
+            if(this.item.itemType==null || this.item.title == null || this.location.name == null || this.location.address == null || this.location.country == null || this.contact.fName == null || this.contact.lName == null || this.contact.email == null){
                 this.resultMessage = "*Please fill in all the required fields."
-            }else{
+            }else if(this.isNumeric == false){
+                this.resultMessage = "*Please enter a valid phone number."
+            }else if (this.isEmailValid == false){
+                this.resultMessage = "*Please enter a valid email address."
+            }
+            else{
+                
+                
                 ItemService.postItem(this.item)
                 .then(response => {
                     this.resultMessage = "item submitted";
@@ -258,7 +271,18 @@ export default {
         },
         validatePhone() {
             const numericRegex = /^\d+$/;
-            this.isNumeric = numericRegex.test(this.phone);
+            if(this.phone !== null && this.phone !==""){
+                this.isNumeric = numericRegex.test(this.phone);
+            }else{
+                this.isNumeric = true;
+            }
+            
+        },
+        validateEmail() {
+            const emailRegex = /@/;
+           if(this.email !== null && this.email !== ""){
+            this.isEmailValid = emailRegex.test(this.email)
+           } 
         },
         setLocationDetails() {
             this.location.name = this.locationName;
