@@ -7,6 +7,7 @@
       <router-link class="navlink" to="/">Home</router-link>
       <router-link class="navlink" to="/searchitem">Search Item</router-link>
       <router-link class="navlink" to="/reportitem">Report Item</router-link>
+      <router-link class="navlink" to="/adminitem">Admin Item</router-link>
     </nav>
     <router-view />
   </div>
