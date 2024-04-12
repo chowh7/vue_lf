@@ -1,9 +1,10 @@
-import {createWebHistory, createRouter} from "vue-router";
+import { createWebHistory, createRouter } from "vue-router";
 import HomeView from "../components/HomeView.vue";
 import SearchItem from "../components/SearchItem.vue";
 import ReportItem from "../components/ReportItem.vue";
 import ItemDetail from "../components/ItemDetail.vue";
-import ReportItemSuccess from "../components/ReportItemSuccess.vue"
+import ReportItemSuccess from "../components/ReportItemSuccess.vue";
+import BatchReport from "../components/BatchReport.vue";
 import AdminItem from "../components/AdminItem.vue";
 import AdminItemDetail from "../components/AdminItemDetail.vue";
 import AdminItemDeleteSuccess from "../components/AdminItemDeleteSuccess.vue";
@@ -14,12 +15,12 @@ const routes = [
         alias: "/home",
         name: "HomeView",
         component: HomeView
-    }, 
+    },
     {
         path: "/searchitem",
         name: "SearchItem",
         component: SearchItem
-    }, 
+    },
     {
         path: "/reportitem",
         name: "ReportItem",
@@ -36,10 +37,15 @@ const routes = [
         component: ReportItemSuccess
     },
     {
+        path: "/batchreport",
+        name: "BatchReport",
+        component: BatchReport
+    },
+    {
         path: "/adminitem",
         name: "AdminItem",
         component: AdminItem
-    }, 
+    },
     {
         path: '/adminitemdetail/:id', // :id is a dynamic segment
         name: 'AdminItemDetail',
@@ -55,6 +61,6 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes
-})
+});
 
 export default router;
