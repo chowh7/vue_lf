@@ -24,6 +24,9 @@ class ItemService {
               'Content-Type': 'multipart/form-data'
             }});
     }
+    deleteItemById(id){
+        return http.delete(`/items/${id}`);
+    }
 }
 
 export default new ItemService();
